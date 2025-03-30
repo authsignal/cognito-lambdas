@@ -8,6 +8,7 @@ const authsignal = new Authsignal({ apiSecretKey, apiUrl });
 
 export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   const userId = event.request.userAttributes.sub;
+  const email = event.request.userAttributes.email;
   const phoneNumber = event.request.userAttributes.phone_number;
 
   if (!userId) {
@@ -25,6 +26,7 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
     action: "cognitoAuth",
     userId,
     attributes: {
+      email,
       phoneNumber,
       challengeId,
     },
@@ -35,8 +37,8 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   }
 
   event.response.publicChallengeParameters = {
-    url,
-    token,
+    url, // Required when using the Authsignal pre-built UI
+    token, // Required when using Authsignal Web or Mobile SDKs
     isEnrolled: isEnrolled.toString(),
   };
 
