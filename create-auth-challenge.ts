@@ -12,14 +12,14 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   // 'email' is required when using email OTP sign-in
   const email = event.request.userAttributes.email;
 
-  // `phoneNumber` is required when using SMS OTP sign-in
+  // 'phoneNumber' is required when using SMS OTP sign-in
   const phoneNumber = event.request.userAttributes.phone_number;
 
   if (!userId) {
     throw new Error("User is undefined");
   }
 
-  // 'challengeId` is recommended when using passkey sign-in
+  // 'challengeId' is recommended when using passkey sign-in
   const { challengeId } = await authsignal.getChallenge({
     action: "cognitoAuth",
     userId,
