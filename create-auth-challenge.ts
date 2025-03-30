@@ -1,4 +1,4 @@
-import { Authsignal, UserActionState, VerificationMethod } from "@authsignal/node";
+import { Authsignal, UserActionState } from "@authsignal/node";
 import { CreateAuthChallengeTriggerHandler } from "aws-lambda";
 
 const apiSecretKey = process.env.AUTHSIGNAL_SECRET!;
@@ -19,20 +19,12 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   // 'phoneNumber' is required when using SMS OTP sign-in
   const phoneNumber = event.request.userAttributes.phone_number;
 
-  // 'challengeId' is recommended when using passkey sign-in
-  const { challengeId } = await authsignal.getChallenge({
-    action: "cognitoAuth",
-    userId,
-    verificationMethod: VerificationMethod.PASSKEY,
-  });
-
   const { url, token, isEnrolled, state } = await authsignal.track({
     action: "cognitoAuth",
     userId,
     attributes: {
       email,
       phoneNumber,
-      challengeId,
     },
   });
 
