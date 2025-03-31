@@ -7,7 +7,7 @@ const apiUrl = process.env.AUTHSIGNAL_URL!;
 const authsignal = new Authsignal({ apiSecretKey, apiUrl });
 
 export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
-  const userId = event.request.userAttributes.sub;
+  const userId = event.request.userAttributes.sub ?? event.userName;
 
   if (!userId) {
     throw new Error("User is undefined");
