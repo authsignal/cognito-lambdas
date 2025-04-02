@@ -7,7 +7,7 @@ const apiUrl = process.env.AUTHSIGNAL_URL!;
 const authsignal = new Authsignal({ apiSecretKey, apiUrl });
 
 export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) => {
-  const userId = event.request.userAttributes.sub;
+  const userId = event.userName;
   const token = event.request.challengeAnswer;
 
   const { state } = await authsignal.validateChallenge({
