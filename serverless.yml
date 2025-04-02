@@ -1,4 +1,4 @@
-service: cognito-sms
+service: cognito-example
 
 useDotenv: true
 
