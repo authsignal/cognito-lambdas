@@ -13,9 +13,9 @@ provider:
       jwtAuthorizer:
         type: jwt
         identitySource: $request.header.authorization
-        issuerUrl: https://cognito-idp.us-west-2.amazonaws.com/us-west-2_bZdsrziQ9
+        issuerUrl: ${env:JWT_AUTHORIZER_ISSUER_URL}
         audience:
-          - 35kkrdcretk19d7u48q45uhqh9
+          - ${env:JWT_AUTHORIZER_AUDIENCE}
 
 package:
   individually: true
