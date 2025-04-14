@@ -8,6 +8,14 @@ provider:
   environment:
     AUTHSIGNAL_SECRET: ${env:AUTHSIGNAL_SECRET}
     AUTHSIGNAL_URL: ${env:AUTHSIGNAL_URL}
+  httpApi:
+    authorizers:
+      jwtAuthorizer:
+        type: jwt
+        identitySource: $request.header.authorization
+        issuerUrl: ${env:JWT_AUTHORIZER_ISSUER_URL}
+        audience:
+          - ${env:JWT_AUTHORIZER_AUDIENCE}
 
 package:
   individually: true
@@ -24,3 +32,12 @@ functions:
 
   preSignUp:
     handler: pre-sign-up.handler
+
+  addAuthenticator:
+    handler: add-authenticator.handler
+    events:
+      - httpApi:
+          method: post
+          path: /authenticators
+          authorizer:
+            name: jwtAuthorizer
