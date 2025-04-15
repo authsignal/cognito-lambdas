@@ -1,5 +1,5 @@
 import { APIGatewayProxyEventV2WithJWTAuthorizer } from "aws-lambda";
-import { authsignal } from "./authsignal";
+import { authsignal } from "../authsignal";
 
 export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
   const claims = event.requestContext.authorizer.jwt.claims;

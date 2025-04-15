@@ -22,19 +22,19 @@ package:
 
 functions:
   defineAuthChallenge:
-    handler: define-auth-challenge.handler
+    handler: triggers/define-auth-challenge.handler
 
   createAuthChallenge:
-    handler: create-auth-challenge.handler
+    handler: triggers/create-auth-challenge.handler
 
   verifyAuthChallengeResponse:
-    handler: verify-auth-challenge-response.handler
+    handler: triggers/verify-auth-challenge-response.handler
 
   preSignUp:
-    handler: pre-sign-up.handler
+    handler: triggers/pre-sign-up.handler
 
   addAuthenticator:
-    handler: add-authenticator.handler
+    handler: api/add-authenticator.handler
     events:
       - httpApi:
           method: post

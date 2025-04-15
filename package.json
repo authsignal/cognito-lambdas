@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "deploy": "serverless deploy --region=us-west-2",
-    "package": "serverless package --region=us-west-2"
+    "deploy": "serverless deploy",
+    "package": "serverless package"
   },
   "dependencies": {
     "@authsignal/node": "^2.3.2"
