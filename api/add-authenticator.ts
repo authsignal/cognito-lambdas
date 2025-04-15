@@ -1,6 +1,7 @@
 import { APIGatewayProxyEventV2WithJWTAuthorizer } from "aws-lambda";
 import { authsignal } from "../authsignal";
 
+// Generates an Authsignal token for enrolling a new authenticator (e.g. email OTP, passkey)
 export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
   const claims = event.requestContext.authorizer.jwt.claims;
 

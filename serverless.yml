@@ -8,14 +8,17 @@ provider:
   environment:
     AUTHSIGNAL_SECRET: ${env:AUTHSIGNAL_SECRET}
     AUTHSIGNAL_URL: ${env:AUTHSIGNAL_URL}
+    ACCESS_KEY_ID: ${env:ACCESS_KEY_ID}
+    SECRET_ACCESS_KEY: ${env:SECRET_ACCESS_KEY}
+    USER_POOL_ID: ${env:USER_POOL_ID}
   httpApi:
     authorizers:
       jwtAuthorizer:
         type: jwt
         identitySource: $request.header.authorization
-        issuerUrl: ${env:JWT_AUTHORIZER_ISSUER_URL}
+        issuerUrl: https://cognito-idp.${env:REGION}.amazonaws.com/${env:USER_POOL_ID}
         audience:
-          - ${env:JWT_AUTHORIZER_AUDIENCE}
+          - ${env:USER_POOL_CLIENT_ID}
 
 package:
   individually: true
@@ -39,5 +42,14 @@ functions:
       - httpApi:
           method: post
           path: /authenticators
+          authorizer:
+            name: jwtAuthorizer
+
+  verifyEmail:
+    handler: api/verify-email.handler
+    events:
+      - httpApi:
+          method: post
+          path: /authenticators/email/verify
           authorizer:
             name: jwtAuthorizer

@@ -9,9 +9,15 @@ It includes the following lambdas for signing in with an Email OTP or SMS/WhatsA
 - [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/create-auth-challenge.ts)
 - [Verify auth challenge response](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/verify-auth-challenge-response.ts)
 
-As well as an API endpoint for creating a passkey after signing in:
+As well as the following API endpoints.
+
+For adding secondary authentication methods (e.g. passkey):
 
 - [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/add-authenticator.ts)
+
+For setting the `email_verified` attribute in Cognito:
+
+- [Verify email](https://github.com/authsignal/cognito-lambdas/blob/main/api/verify-email.ts)
 
 ## Installation
 
