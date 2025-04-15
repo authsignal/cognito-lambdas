@@ -1,13 +1,9 @@
-import { Authsignal } from "@authsignal/node";
 import { VerifyAuthChallengeResponseTriggerHandler } from "aws-lambda";
-
-const apiSecretKey = process.env.AUTHSIGNAL_SECRET!;
-const apiUrl = process.env.AUTHSIGNAL_URL!;
-
-const authsignal = new Authsignal({ apiSecretKey, apiUrl });
+import { authsignal } from "./authsignal";
 
 export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) => {
-  const userId = event.userName;
+  const userId = event.request.userAttributes.sub;
+
   const token = event.request.challengeAnswer;
 
   const { state } = await authsignal.validateChallenge({
