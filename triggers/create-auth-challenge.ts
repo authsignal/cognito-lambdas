@@ -2,7 +2,7 @@ import { CreateAuthChallengeTriggerHandler } from "aws-lambda";
 import { authsignal } from "../authsignal";
 
 export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
-  const userId = event.request.userAttributes.sub;
+  const userId = event.userName;
 
   // Only required when using email OTP sign-in
   const email = event.request.userAttributes.email;
