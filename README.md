@@ -31,13 +31,16 @@ yarn install
 
 ## Configuration
 
-Rename `.env.example` to `.env` and provide the values for your Cognito user pool and Authsignal tenant.
+Rename `.env.example` to `.env` and provide the values for your AWS and Authsignal configuration.
 
 ```
+AWS_REGION=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+USER_POOL_ID=
+USER_POOL_CLIENT_ID=
 AUTHSIGNAL_SECRET=
 AUTHSIGNAL_URL=
-JWT_AUTHORIZER_ISSUER_URL=
-JWT_AUTHORIZER_AUDIENCE=
 ```
 
 ## Deployment
