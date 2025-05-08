@@ -1,5 +1,8 @@
 import { VerifyAuthChallengeResponseTriggerHandler } from "aws-lambda";
+import { OAuth2Client } from "google-auth-library";
 import { authsignal } from "../authsignal";
+
+const oauth2Client = new OAuth2Client();
 
 export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) => {
   event.response.answerCorrect = false;
@@ -9,19 +12,48 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
     return event;
   }
 
-  const userId = event.userName;
-  const token = event.request.challengeAnswer;
   const signInMethod = event.request.clientMetadata?.signInMethod;
 
-  const action = signInMethod === "PASSKEY" ? "cognitoPasskeyAuth" : "cognitoSmsAuth";
+  switch (signInMethod) {
+    case "SMS": {
+      const { isValid } = await authsignal.validateChallenge({
+        action: "cognitoSmsAuth",
+        userId: event.userName,
+        token: event.request.challengeAnswer,
+      });
 
-  const { isValid } = await authsignal.validateChallenge({
-    action,
-    userId,
-    token,
-  });
+      event.response.answerCorrect = isValid;
 
-  event.response.answerCorrect = isValid;
+      return event;
+    }
 
-  return event;
+    case "PASSKEY": {
+      const { isValid } = await authsignal.validateChallenge({
+        action: "cognitoPasskeyAuth",
+        userId: event.userName,
+        token: event.request.challengeAnswer,
+      });
+
+      event.response.answerCorrect = isValid;
+
+      return event;
+    }
+
+    case "GOOGLE": {
+      const idToken = event.request.challengeAnswer;
+
+      const ticket = await oauth2Client.verifyIdToken({ idToken });
+
+      const payload = ticket.getPayload();
+
+      const isEmailVerified = !!payload?.email && !!payload.email_verified;
+
+      event.response.answerCorrect = isEmailVerified;
+
+      return event;
+    }
+
+    default:
+      throw new Error("Invalid sign-in method");
+  }
 };

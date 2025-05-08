@@ -14,42 +14,51 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
     return event;
   }
 
-  const { signInMethod } = event.request.clientMetadata ?? {};
+  const signInMethod = event.request.clientMetadata?.signInMethod;
 
-  // If signing in via SMS, send an Authsignal token back to the client
-  // This will be used to perform an OTP challenge with the Authsignal Client SDK
-  if (signInMethod === "SMS") {
-    const userId = event.userName;
-    const phoneNumber = event.request.userAttributes.phone_number;
+  switch (signInMethod) {
+    case "SMS": {
+      // If signing in via SMS, send an Authsignal token back to the client
+      // This will be used to perform an OTP challenge with the Authsignal Client SDK
+      const phoneNumber = event.request.userAttributes.phone_number;
 
-    const { token, isEnrolled } = await authsignal.track({
-      action: "cognitoSmsAuth",
-      userId,
-      attributes: {
-        phoneNumber,
-      },
-    });
+      const { token, isEnrolled } = await authsignal.track({
+        action: "cognitoSmsAuth",
+        userId: event.userName,
+        attributes: {
+          phoneNumber,
+        },
+      });
 
-    event.response.privateChallengeParameters = {
-      challenge: "SMS",
-    };
+      event.response.publicChallengeParameters = {
+        token,
+        isEnrolled: isEnrolled.toString(),
+      };
 
-    event.response.publicChallengeParameters = {
-      token,
-      isEnrolled: isEnrolled.toString(),
-    };
+      event.response.privateChallengeParameters = {
+        challenge: "SMS",
+      };
 
-    return event;
+      return event;
+    }
+
+    case "PASSKEY": {
+      event.response.privateChallengeParameters = {
+        challenge: "PASSKEY",
+      };
+
+      return event;
+    }
+
+    case "GOOGLE": {
+      event.response.privateChallengeParameters = {
+        challenge: "GOOGLE",
+      };
+
+      return event;
+    }
+
+    default:
+      throw new Error("Invalid sign-in method");
   }
-
-  // If signing in via passkey, no public challenge params are needed
-  if (signInMethod === "PASSKEY") {
-    event.response.privateChallengeParameters = {
-      challenge: "PASSKEY",
-    };
-
-    return event;
-  }
-
-  throw new Error("Invalid sign-in method");
 };
