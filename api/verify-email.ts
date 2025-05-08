@@ -1,9 +1,9 @@
-import { APIGatewayProxyEventV2WithJWTAuthorizer } from "aws-lambda";
-import { authsignal } from "../authsignal";
 import {
   AdminUpdateUserAttributesCommand,
   CognitoIdentityProviderClient,
 } from "@aws-sdk/client-cognito-identity-provider";
+import { APIGatewayProxyEventV2WithJWTAuthorizer } from "aws-lambda";
+import { authsignal } from "../authsignal";
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
   region: process.env.REGION!,
@@ -16,16 +16,13 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 // Verifies that a new email authenticator has been successfully enrolled
 // Sets the email as verified in Cognito
 export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
-  const claims = event.requestContext.authorizer.jwt.claims;
-
-  const userId = claims.sub as string;
-  const username = claims.username as string;
+  const username = event.requestContext.authorizer.jwt.claims.username as string;
 
   const { email, token } = JSON.parse(event.body!);
 
   const { isValid } = await authsignal.validateChallenge({
     action: "addAuthenticator",
-    userId,
+    userId: username,
     token,
   });
 

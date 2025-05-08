@@ -19,7 +19,7 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   // If signing in via SMS, send an Authsignal token back to the client
   // This will be used to perform an OTP challenge with the Authsignal Client SDK
   if (signInMethod === "SMS") {
-    const userId = event.request.userAttributes.sub;
+    const userId = event.userName;
     const phoneNumber = event.request.userAttributes.phone_number;
 
     const { token, isEnrolled } = await authsignal.track({

@@ -53,3 +53,10 @@ functions:
           path: /authenticators/email/verify
           authorizer:
             name: jwtAuthorizer
+
+  initAuth:
+    handler: api/init-auth.handler
+    events:
+      - httpApi:
+          method: post
+          path: /init
