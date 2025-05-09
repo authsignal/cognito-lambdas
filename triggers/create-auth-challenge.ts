@@ -21,9 +21,10 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
       // If signing in via SMS, send an Authsignal token back to the client
       // This will be used to perform an OTP challenge with the Authsignal Client SDK
       const phoneNumber = event.request.userAttributes.phone_number;
+      const phoneNumberVerified = event.request.userAttributes.phone_number_verified;
 
-      const { token, isEnrolled } = await authsignal.track({
-        action: "cognitoSmsAuth",
+      const { token } = await authsignal.track({
+        action: "cognitoAuth",
         userId: event.userName,
         attributes: {
           phoneNumber,
@@ -32,7 +33,7 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
 
       event.response.publicChallengeParameters = {
         token,
-        isEnrolled: isEnrolled.toString(),
+        phoneNumberVerified,
       };
 
       event.response.privateChallengeParameters = {

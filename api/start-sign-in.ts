@@ -19,7 +19,11 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 
 const oauth2Client = new OAuth2Client();
 
-export const handler = async (event: APIGatewayProxyEventV2) => {
+interface StartSignInResponse {
+  username: string;
+}
+
+export const handler = async (event: APIGatewayProxyEventV2): Promise<StartSignInResponse> => {
   const { phoneNumber, googleIdToken } = JSON.parse(event.body!);
 
   if (phoneNumber) {
@@ -66,12 +70,9 @@ async function handleGoogleAuth(idToken: string) {
 
   const users = await queryUsersByEmail(verifiedEmail);
 
-  if (users.length > 0) {
-    const user = users[0];
-    const { username } = user;
-
+  if (users[0]?.username) {
     return {
-      username,
+      username: users[0].username,
     };
   }
 
