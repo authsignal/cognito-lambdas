@@ -2,26 +2,36 @@
 
 This repository contains example lambdas for integrating Authsignal with Amazon Cognito.
 
-It includes the following:
+These lambdas are designed to be used together with the [React Native example app](https://github.com/authsignal/aws-cognito-react-native-example).
+
+It includes the following.
+
+## Unauthenticated API endpoint lambda
+
+This lambda is called before initiating sign-in with Cognito.
+It will lookup a user by phone number or Google ID token, create them in Cognito if they don't exist, and return their username.
+
+- [Start sign-in](https://github.com/authsignal/cognito-lambdas/blob/main/api/start-sign-in.ts)
 
 ## Cognito trigger lambdas
 
-The following lambdas are used for signing in with an Email OTP or SMS/WhatsApp OTP challenge:
+The following lambdas are used for signing in to Cognito with SMS OTP, passkey, or Google sign-in:
 
-- [Pre sign-up](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/pre-sign-up.ts)
 - [Define auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/define-auth-challenge.ts)
 - [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/create-auth-challenge.ts)
 - [Verify auth challenge response](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/verify-auth-challenge-response.ts)
 
-## API endpoint lambdas
+## Authenticated API endpoint lambdas
 
-This lambda is used for enrolling additional authentication methods via the Authsignal Client SDK (e.g. passkey):
+This lambda is called to enroll additional authentication methods via the Authsignal React Native SDK (e.g. SMS OTP, email OTP, passkey).
+It will return an Authsignal token which is set on the React Native SDK to authorize enrolling a new authenticator.
 
 - [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/add-authenticator.ts)
 
-This lambda is used for setting the `email_verified` attribute in Cognito:
+This lambda is called after enrolling a new authenticator via the Authsignal React Native SDK.
+It will check if an SMS OTP or email OTP authenticator is enrolled and set the corresponding Cognito user attributes (i.e. email and/or phone number) as verified.
 
-- [Verify email](https://github.com/authsignal/cognito-lambdas/blob/main/api/verify-email.ts)
+- [Verify authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/verify-authenticator.ts)
 
 ## Installation
 
@@ -53,4 +63,4 @@ yarn deploy --region=YOUR_AWS_REGION
 
 ## Documentation
 
-For more detailed information on how to integrate Authsignal with Amazon Cognito refer to our [official documentation](https://docs.authsignal.com/integrations/aws-cognito/overview).
+For more detailed information on how to integrate Authsignal with Amazon Cognito refer to our [official documentation](https://docs.authsignal.com/integrations/aws-cognito/getting-started).

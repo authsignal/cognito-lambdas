@@ -1,29 +1,54 @@
 import { CreateAuthChallengeTriggerHandler } from "aws-lambda";
-import { authsignal } from "../authsignal";
+import { authsignal } from "../lib/authsignal";
 
 export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
-  const userId = event.request.userAttributes.sub;
+  if (!event.request.session || !event.request.session.length) {
+    // When Create Auth Challenge is called the 1st time
+    // We let the user respond by providing some auth parameters
+    const challenge = "PROVIDE_AUTH_PARAMETERS";
 
-  // Only required when using email OTP sign-in
-  const email = event.request.userAttributes.email;
+    event.response.challengeMetadata = challenge;
+    event.response.privateChallengeParameters = { challenge };
+    event.response.publicChallengeParameters = { challenge };
 
-  // Only required when using SMS OTP sign-in
-  const phoneNumber = event.request.userAttributes.phone_number;
+    return event;
+  }
 
-  const { url, token, isEnrolled } = await authsignal.track({
-    action: "cognitoAuth",
-    userId,
-    attributes: {
-      email,
-      phoneNumber,
-    },
-  });
+  switch (event.request.clientMetadata?.signInMethod) {
+    case "SMS": {
+      // If signing in via SMS, send an Authsignal token back to the client
+      // This will be used to perform an OTP challenge with the Authsignal Client SDK
+      const phoneNumber = event.request.userAttributes.phone_number;
 
-  event.response.publicChallengeParameters = {
-    url, // Only required when using the Authsignal pre-built UI
-    token, // Only required when using the Authsignal Web or Mobile SDKs
-    isEnrolled: isEnrolled.toString(),
-  };
+      const { token, enrolledVerificationMethods } = await authsignal.track({
+        action: "cognitoAuth",
+        userId: event.userName,
+        attributes: {
+          phoneNumber,
+        },
+      });
 
-  return event;
+      const phoneNumberVerified = enrolledVerificationMethods?.find((m) => m === "SMS") ? "true" : "false";
+
+      event.response.publicChallengeParameters = { token, phoneNumberVerified };
+      event.response.privateChallengeParameters = { challenge: "SMS" };
+
+      return event;
+    }
+
+    case "PASSKEY": {
+      event.response.privateChallengeParameters = { challenge: "PASSKEY" };
+
+      return event;
+    }
+
+    case "GOOGLE": {
+      event.response.privateChallengeParameters = { challenge: "GOOGLE" };
+
+      return event;
+    }
+
+    default:
+      throw new Error("Invalid sign-in method");
+  }
 };

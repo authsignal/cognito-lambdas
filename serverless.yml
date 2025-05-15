@@ -33,8 +33,12 @@ functions:
   verifyAuthChallengeResponse:
     handler: triggers/verify-auth-challenge-response.handler
 
-  preSignUp:
-    handler: triggers/pre-sign-up.handler
+  startSignIn:
+    handler: api/start-sign-in.handler
+    events:
+      - httpApi:
+          method: post
+          path: /start-sign-in
 
   addAuthenticator:
     handler: api/add-authenticator.handler
@@ -45,11 +49,11 @@ functions:
           authorizer:
             name: jwtAuthorizer
 
-  verifyEmail:
-    handler: api/verify-email.handler
+  verifyAuthenticator:
+    handler: api/verify-authenticator.handler
     events:
       - httpApi:
           method: post
-          path: /authenticators/email/verify
+          path: /authenticators/verify
           authorizer:
             name: jwtAuthorizer

@@ -7,8 +7,9 @@
     "package": "serverless package"
   },
   "dependencies": {
-    "@authsignal/node": "^2.3.2",
-    "@aws-sdk/client-cognito-identity-provider": "^3.787.0"
+    "@authsignal/node": "^2.4.3",
+    "@aws-sdk/client-cognito-identity-provider": "^3.787.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.148",
