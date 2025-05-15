@@ -4,16 +4,16 @@ This repository contains example lambdas for integrating Authsignal with Amazon 
 
 These lambdas are designed to be used together with the [React Native example app](https://github.com/authsignal/aws-cognito-react-native-example).
 
-It includes the following.
+The repository includes lambdas for the following features:
 
-## Unauthenticated API endpoint lambda
+## Start sign-in endpoint
 
 This lambda is called before initiating sign-in with Cognito.
 It will lookup a user by phone number or Google ID token, create them in Cognito if they don't exist, and return their username.
 
 - [Start sign-in](https://github.com/authsignal/cognito-lambdas/blob/main/api/start-sign-in.ts)
 
-## Cognito trigger lambdas
+## Cognito triggers
 
 The following lambdas are used for signing in to Cognito with SMS OTP, passkey, or Google sign-in:
 
@@ -21,7 +21,7 @@ The following lambdas are used for signing in to Cognito with SMS OTP, passkey, 
 - [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/create-auth-challenge.ts)
 - [Verify auth challenge response](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/verify-auth-challenge-response.ts)
 
-## Authenticated API endpoint lambdas
+## Add & verify authenticator endpoints
 
 This lambda is called to enroll additional authentication methods via the Authsignal React Native SDK (e.g. SMS OTP, email OTP, passkey).
 It will return an Authsignal token which is set on the React Native SDK to authorize enrolling a new authenticator.
