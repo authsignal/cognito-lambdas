@@ -23,13 +23,11 @@ The following lambdas are used for signing in to Cognito with SMS OTP, passkey, 
 
 ## Add & verify authenticator endpoints
 
-This lambda is called to enroll additional authentication methods via the Authsignal React Native SDK (e.g. SMS OTP, email OTP, passkey).
-It will return an Authsignal token which is set on the React Native SDK to authorize enrolling a new authenticator.
+This lambda is called to authorize enrolling additional authentication methods (e.g. email OTP, SMS OTP, passkey) via an Authsignal Client SDK.
 
 - [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/add-authenticator.ts)
 
-This lambda is called after enrolling a new authenticator via the Authsignal React Native SDK.
-It will check if an SMS OTP or email OTP authenticator is enrolled and set the corresponding Cognito user attributes (i.e. email and/or phone number) as verified.
+This lambda is called to set the email and phone number attributes as verified in Cognito after enrolling a new email OTP or SMS OTP authenticator.
 
 - [Verify authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/verify-authenticator.ts)
 
