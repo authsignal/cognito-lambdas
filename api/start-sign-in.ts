@@ -12,7 +12,7 @@ interface ResponseBody {
   username: string;
 }
 
-// Looks up a user by phone number or Google ID token
+// Looks up a user by phone number or Apple/Google ID token
 // If the user does not exist, creates a new user in Authsignal & Cognito
 // Returns the username to use for Cognito sign-in
 export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBody> => {

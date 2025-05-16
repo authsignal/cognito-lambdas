@@ -38,7 +38,7 @@ export async function createCognitoUser(input: CognitoUserAttributesInput) {
   }
 
   // A user may be created with a verified email address
-  // For example is created via Google sign-in
+  // For example if created via Apple or Google sign-in
   if (emailVerified) {
     userAttributes.push({ Name: "email_verified", Value: "true" });
   }
