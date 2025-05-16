@@ -8,10 +8,14 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
     return event;
   }
 
+  // For SMS and passkey this will be an Authsignal token
+  // For Apple and Google sign-in it will be an ID token
+  const token = event.request.challengeAnswer;
+
   const { isValid, verificationMethod } = await authsignal.validateChallenge({
     action: "cognitoAuth",
     userId: event.userName,
-    token: event.request.challengeAnswer,
+    token,
   });
 
   event.response.answerCorrect = isValid;
