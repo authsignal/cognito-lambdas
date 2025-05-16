@@ -5,7 +5,7 @@ import { createCognitoUser } from "../lib/cognito";
 
 interface RequestBody {
   phoneNumber?: string;
-  googleIdToken?: string;
+  idToken?: string;
 }
 
 interface ResponseBody {
@@ -16,12 +16,12 @@ interface ResponseBody {
 // If the user does not exist, creates a new user in Authsignal & Cognito
 // Returns the username to use for Cognito sign-in
 export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBody> => {
-  const { phoneNumber, googleIdToken } = JSON.parse(event.body!) as RequestBody;
+  const { phoneNumber, idToken } = JSON.parse(event.body!) as RequestBody;
 
   if (phoneNumber) {
     return handleSmsAuth(phoneNumber);
-  } else if (googleIdToken) {
-    return handleGoogleAuth(googleIdToken);
+  } else if (idToken) {
+    return handleSocialAuth(idToken);
   }
 
   throw new Error("Invalid request parameters");
@@ -37,10 +37,7 @@ async function handleSmsAuth(phoneNumber: string) {
   }
 
   const username = uuid();
-  const attributes = {
-    username,
-    phoneNumber,
-  };
+  const attributes = { username, phoneNumber };
 
   await createCognitoUser(attributes);
 
@@ -51,7 +48,7 @@ async function handleSmsAuth(phoneNumber: string) {
   };
 }
 
-async function handleGoogleAuth(idToken: string) {
+async function handleSocialAuth(idToken: string) {
   const { users, tokenPayload } = await authsignal.queryUsers({ token: idToken });
 
   if (users[0]?.username) {
