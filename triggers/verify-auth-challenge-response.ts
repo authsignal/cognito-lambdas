@@ -20,13 +20,17 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
 
   event.response.answerCorrect = isValid;
 
-  if (isValid && verificationMethod === "SMS") {
-    const phoneNumberVerified = event.request.userAttributes.phone_number_verified === "true";
+  const phoneNumberVerified = event.request.userAttributes.phone_number_verified === "true";
+  const emailVerified = event.request.userAttributes.email_verified === "true";
 
-    // Set the phone number as verified in Cognito if it is not already
-    if (!phoneNumberVerified) {
-      await updateCognitoUserAttributes({ username: event.userName, phoneNumberVerified: true });
-    }
+  // Set the phone number as verified in Cognito if it is not already
+  if (isValid && verificationMethod === "SMS" && !phoneNumberVerified) {
+    await updateCognitoUserAttributes({ username: event.userName, phoneNumberVerified: true });
+  }
+
+  // Set the email as verified in Cognito if it is not already
+  if (isValid && verificationMethod === "EMAIL_OTP" && !emailVerified) {
+    await updateCognitoUserAttributes({ username: event.userName, emailVerified: true });
   }
 
   return event;
