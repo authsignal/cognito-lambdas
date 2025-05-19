@@ -2,20 +2,22 @@
 
 This repository contains example lambdas for integrating Authsignal with Amazon Cognito.
 
-These lambdas are designed to be used together with the [React Native example app](https://github.com/authsignal/aws-cognito-react-native-example).
+## Example app
 
-The repository includes lambdas for the following features:
+These lambdas are designed to be used together with our [React Native example app](https://github.com/authsignal/aws-cognito-react-native-example).
+
+<img src="sign-in.png" alt="sign-in" width="300"/>
 
 ## Start sign-in endpoint
 
 This lambda is called before initiating sign-in with Cognito.
-It will lookup a user by phone number or Google ID token, create them in Cognito if they don't exist, and return their username.
+It will lookup a user by phone number, email, or Apple/Google ID token, create them in Cognito if they don't exist, and return their username.
 
 - [Start sign-in](https://github.com/authsignal/cognito-lambdas/blob/main/api/start-sign-in.ts)
 
 ## Cognito triggers
 
-The following lambdas are used for signing in to Cognito with SMS OTP, passkey, or Google sign-in:
+The following lambdas are used for signing in to Cognito with SMS OTP, email OTP, passkey, or Apple or Google sign-in:
 
 - [Define auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/define-auth-challenge.ts)
 - [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/create-auth-challenge.ts)
@@ -23,7 +25,7 @@ The following lambdas are used for signing in to Cognito with SMS OTP, passkey, 
 
 ## Add & verify authenticator endpoints
 
-This lambda is called to authorize enrolling additional authentication methods (e.g. email OTP, SMS OTP, passkey) via an Authsignal Client SDK.
+This lambda is called to authorize enrolling additional authentication methods (e.g. email OTP, SMS OTP, passkey) via a Authsignal Client SDK.
 
 - [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/add-authenticator.ts)
 
@@ -42,9 +44,8 @@ yarn install
 Rename `.env.example` to `.env` and provide the values for your AWS and Authsignal configuration.
 
 ```
-AWS_REGION=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
+ACCESS_KEY_ID=
+SECRET_ACCESS_KEY=
 USER_POOL_ID=
 USER_POOL_CLIENT_ID=
 AUTHSIGNAL_SECRET=
