@@ -20,7 +20,7 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
     throw new Error("signInMethod is required");
   }
 
-  // If signing in via SMS, send an Authsignal token back to the client
+  // If signing in via SMS or email, send an Authsignal token back to the client
   // This will be used to perform an OTP challenge with the Authsignal Client SDK
   if (signInMethod === "SMS" || signInMethod === "EMAIL") {
     const phoneNumber = event.request.userAttributes.phone_number;
