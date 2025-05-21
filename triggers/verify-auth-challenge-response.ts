@@ -8,8 +8,8 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
     return event;
   }
 
-  // For SMS and passkey this will be an Authsignal token
-  // For Apple and Google sign-in it will be an ID token
+  // For SMS, email OTP, and passkey this will be an Authsignal token
+  // For Apple and Google sign-in it will be an Apple or Google ID token
   const token = event.request.challengeAnswer;
 
   const { isValid, verificationMethod } = await authsignal.validateChallenge({
