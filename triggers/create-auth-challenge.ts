@@ -26,7 +26,7 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
     const phoneNumber = event.request.userAttributes.phone_number;
     const email = event.request.userAttributes.email;
 
-    const { token, enrolledVerificationMethods } = await authsignal.track({
+    const { token } = await authsignal.track({
       action: "cognitoAuth",
       userId: event.userName,
       attributes: {
@@ -35,10 +35,7 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
       },
     });
 
-    const phoneNumberVerified = enrolledVerificationMethods?.find((m) => m === "SMS") ? "true" : "false";
-    const emailVerified = enrolledVerificationMethods?.find((m) => m === "EMAIL_OTP") ? "true" : "false";
-
-    event.response.publicChallengeParameters = { token, phoneNumberVerified, emailVerified };
+    event.response.publicChallengeParameters = { token };
   }
 
   event.response.privateChallengeParameters = { challenge: signInMethod };

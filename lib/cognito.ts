@@ -44,7 +44,6 @@ export async function createCognitoUser(input: CognitoUserAttributesInput) {
   }
 
   const createUserCommand = new AdminCreateUserCommand({
-    ForceAliasCreation: false,
     UserPoolId: process.env.USER_POOL_ID!,
     Username: username,
     MessageAction: "SUPPRESS",
