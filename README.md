@@ -25,7 +25,7 @@ The following lambdas are used for signing in to Cognito with SMS OTP, email OTP
 
 ## Add & verify authenticator endpoints
 
-This lambda is called to authorize enrolling additional authentication methods (e.g. email OTP, SMS OTP, passkey) via a Authsignal Client SDK.
+This lambda is called to authorize enrolling additional authentication methods (e.g. email OTP, SMS OTP, passkey) via a Authsignal Client SDK once the user is signed in.
 
 - [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/add-authenticator.ts)
 
