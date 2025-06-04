@@ -12,32 +12,32 @@ These lambdas are designed to be used together with our [React Native example ap
 
 This lambda can be called to initiate an SMS challenge by sending an OTP code.
 
-- [Init SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/main/api/init-sms-challenge.ts)
+- [Init SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/init-sms-challenge.ts)
 
 ## Verify SMS challenge
 
 This lambda can be called to verify an SMS challenge by checking the OTP code submitted by the user.
 If the code is valid, then a user is created in Cognito with a verified phone number.
 
-- [Verify SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/main/api/verify-sms-challenge.ts)
+- [Verify SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/verify-sms-challenge.ts)
 
 ## Cognito triggers
 
 The following lambdas are used for signing in to Cognito with SMS OTP, email OTP, passkey, or Apple or Google sign-in:
 
-- [Define auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/define-auth-challenge.ts)
-- [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/create-auth-challenge.ts)
-- [Verify auth challenge response](https://github.com/authsignal/cognito-lambdas/blob/main/triggers/verify-auth-challenge-response.ts)
+- [Define auth challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/triggers/define-auth-challenge.ts)
+- [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/triggers/create-auth-challenge.ts)
+- [Verify auth challenge response](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/triggers/verify-auth-challenge-response.ts)
 
 ## Add & verify authenticator endpoints
 
 This lambda is called to authorize enrolling additional authentication methods (e.g. email OTP, SMS OTP, passkey) via a Authsignal Client SDK once the user is signed in.
 
-- [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/add-authenticator.ts)
+- [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/add-authenticator.ts)
 
 This lambda is called to set the email and phone number attributes as verified in Cognito after enrolling a new email OTP or SMS OTP authenticator.
 
-- [Verify authenticator](https://github.com/authsignal/cognito-lambdas/blob/main/api/verify-authenticator.ts)
+- [Verify authenticator](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/verify-authenticator.ts)
 
 ## Installation
 
