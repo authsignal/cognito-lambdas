@@ -6,7 +6,6 @@ import { createCognitoUser } from "../lib/cognito";
 interface RequestBody {
   challengeId: string;
   verificationCode: string;
-  phoneNumber: string;
 }
 
 interface ResponseBody {
@@ -16,14 +15,14 @@ interface ResponseBody {
 }
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBody> => {
-  const { challengeId, verificationCode, phoneNumber } = JSON.parse(event.body!) as RequestBody;
+  const { challengeId, verificationCode } = JSON.parse(event.body!) as RequestBody;
 
-  const { isVerified } = await authsignal.verify({
+  const { isVerified, phoneNumber } = await authsignal.verify({
     challengeId,
     verificationCode,
   });
 
-  if (!isVerified) {
+  if (!isVerified || !phoneNumber) {
     return {
       isVerified: false,
     };
