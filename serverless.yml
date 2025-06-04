@@ -71,3 +71,9 @@ functions:
       - httpApi:
           method: post
           path: /verify/sms
+
+build:
+  esbuild:
+    bundle: true
+    external:
+      - "@aws-sdk/client-cognito-identity-provider"
