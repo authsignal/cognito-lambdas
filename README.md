@@ -8,12 +8,18 @@ These lambdas are designed to be used together with our [React Native example ap
 
 <img src="sign-in.png" alt="sign-in" width="300"/>
 
-## Start sign-in endpoint
+## Init SMS challenge
 
-This lambda is called before initiating sign-in with Cognito.
-It will lookup a user by phone number, email, or Apple/Google ID token, create them in Cognito if they don't exist, and return their username.
+This lambda can be called to initiate an SMS challenge by sending an OTP code.
 
-- [Start sign-in](https://github.com/authsignal/cognito-lambdas/blob/main/api/start-sign-in.ts)
+- [Init SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/main/api/init-sms-challenge.ts)
+
+## Verify SMS challenge
+
+This lambda can be called to verify an SMS challenge by checking the OTP code submitted by the user.
+If the code is valid, then a user is created in Cognito with a verified phone number.
+
+- [Verify SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/main/api/verify-sms-challenge.ts)
 
 ## Cognito triggers
 

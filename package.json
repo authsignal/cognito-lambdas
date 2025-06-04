@@ -7,8 +7,8 @@
     "package": "serverless package"
   },
   "dependencies": {
-    "@authsignal/node": "^2.4.3",
-    "@aws-sdk/client-cognito-identity-provider": "^3.787.0",
+    "@authsignal/node": "^2.5.2",
+    "@aws-sdk/client-cognito-identity-provider": "^3.823.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
@@ -17,8 +17,8 @@
     "aws-lambda": "^1.0.7",
     "eslint": "^8.19.0",
     "prettier": "2.8.8",
-    "serverless": "^4.1.6",
-    "typescript": "5.0.4"
+    "serverless": "^4.16.0",
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=18"

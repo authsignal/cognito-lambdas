@@ -24,7 +24,7 @@ interface CognitoUserAttributesInput {
 }
 
 export async function createCognitoUser(input: CognitoUserAttributesInput) {
-  const { username, email, emailVerified, phoneNumber } = input;
+  const { username, email, emailVerified, phoneNumber, phoneNumberVerified } = input;
 
   // Phone number is a required attribute in our user pool
   if (!phoneNumber) {
@@ -33,12 +33,14 @@ export async function createCognitoUser(input: CognitoUserAttributesInput) {
 
   const userAttributes = [{ Name: "phone_number", Value: phoneNumber }];
 
+  if (phoneNumberVerified) {
+    userAttributes.push({ Name: "phone_number_verified", Value: "true" });
+  }
+
   if (email) {
     userAttributes.push({ Name: "email", Value: email });
   }
 
-  // A user may be created with a verified email address
-  // For example if created via Apple or Google sign-in
   if (emailVerified) {
     userAttributes.push({ Name: "email_verified", Value: "true" });
   }

@@ -33,12 +33,12 @@ functions:
   verifyAuthChallengeResponse:
     handler: triggers/verify-auth-challenge-response.handler
 
-  startSignIn:
-    handler: api/start-sign-in.handler
+  init-social-auth:
+    handler: api/init-social-auth.handler
     events:
       - httpApi:
           method: post
-          path: /start-sign-in
+          path: /init-social-auth
 
   addAuthenticator:
     handler: api/add-authenticator.handler
@@ -57,3 +57,17 @@ functions:
           path: /authenticators/verify
           authorizer:
             name: jwtAuthorizer
+
+  init-sms-challenge:
+    handler: api/init-sms-challenge.handler
+    events:
+      - httpApi:
+          method: post
+          path: /challenge/sms
+
+  verify-sms-challenge:
+    handler: api/verify-sms-challenge.handler
+    events:
+      - httpApi:
+          method: post
+          path: /verify/sms
