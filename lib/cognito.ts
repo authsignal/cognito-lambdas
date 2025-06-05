@@ -2,7 +2,6 @@ import {
   AdminCreateUserCommand,
   AdminSetUserPasswordCommand,
   AdminUpdateUserAttributesCommand,
-  AttributeType,
   CognitoIdentityProviderClient,
 } from "@aws-sdk/client-cognito-identity-provider";
 import crypto from "node:crypto";
@@ -64,35 +63,19 @@ export async function createCognitoUser(input: CognitoUserAttributesInput) {
   await cognitoIdentityProviderClient.send(setUserPasswordCommand);
 }
 
-export async function updateCognitoUserAttributes(input: CognitoUserAttributesInput) {
-  const { username, email, emailVerified, phoneNumber, phoneNumberVerified } = input;
+interface SetCognitoEmailVerifiedInput {
+  username: string;
+  email: string;
+}
 
-  const userAttributes: AttributeType[] = [];
-
-  if (email) {
-    userAttributes.push({ Name: "email", Value: email });
-  }
-
-  if (emailVerified) {
-    userAttributes.push({ Name: "email_verified", Value: "true" });
-  }
-
-  if (phoneNumber) {
-    userAttributes.push({ Name: "phone_number", Value: phoneNumber });
-  }
-
-  if (phoneNumberVerified) {
-    userAttributes.push({ Name: "phone_number_verified", Value: "true" });
-  }
-
-  if (userAttributes.length === 0) {
-    return;
-  }
-
+export async function setCognitoEmailVerified(input: SetCognitoEmailVerifiedInput) {
   const command = new AdminUpdateUserAttributesCommand({
     UserPoolId: process.env.USER_POOL_ID!,
-    Username: username,
-    UserAttributes: userAttributes,
+    Username: input.username,
+    UserAttributes: [
+      { Name: "email", Value: input.email },
+      { Name: "email_verified", Value: "true" },
+    ],
   });
 
   await cognitoIdentityProviderClient.send(command);

@@ -12,6 +12,7 @@ interface ResponseBody {
   isVerified: boolean;
   userId?: string;
   token?: string;
+  emailVerified?: boolean;
 }
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBody> => {
@@ -30,7 +31,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBo
 
   // Now we know the user's phone number has been verified.
   // Lookup user by their phone number - create a new user if they don't exist
-  const { userId } = await getOrCreateUser(phoneNumber);
+  const { userId, emailVerified } = await getOrCreateUser(phoneNumber);
 
   // Now claim the SMS challenge on behalf of the user
   const { token } = await authsignal.claimChallenge({ challengeId, userId });
@@ -39,6 +40,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBo
     isVerified,
     userId,
     token,
+    emailVerified,
   };
 };
 
@@ -48,6 +50,7 @@ async function getOrCreateUser(phoneNumber: string) {
   if (users[0]?.userId) {
     return {
       userId: users[0].userId,
+      emailVerified: users[0].emailVerified, // Return email verification status
     };
   }
 
@@ -60,14 +63,8 @@ async function getOrCreateUser(phoneNumber: string) {
     phoneNumberVerified: true,
   });
 
-  await authsignal.updateUser({
-    userId,
-    attributes: {
-      phoneNumber,
-    },
-  });
-
   return {
     userId,
+    emailVerified: false, // Assume email is unverified for new users
   };
 }

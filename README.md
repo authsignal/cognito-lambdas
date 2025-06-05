@@ -29,15 +29,11 @@ The following lambdas are used for signing in to Cognito with SMS OTP, email OTP
 - [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/triggers/create-auth-challenge.ts)
 - [Verify auth challenge response](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/triggers/verify-auth-challenge-response.ts)
 
-## Add & verify authenticator endpoints
+## Add authenticator endpoint
 
-This lambda is called to authorize enrolling additional authentication methods (e.g. email OTP, SMS OTP, passkey) via a Authsignal Client SDK once the user is signed in.
+This lambda is called to authorize enrolling additional authentication methods - such as a passkey - via a Authsignal Client SDK once the user is signed in.
 
 - [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/add-authenticator.ts)
-
-This lambda is called to set the email and phone number attributes as verified in Cognito after enrolling a new email OTP or SMS OTP authenticator.
-
-- [Verify authenticator](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/verify-authenticator.ts)
 
 ## Installation
 
