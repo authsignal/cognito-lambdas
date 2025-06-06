@@ -21,6 +21,20 @@ If the code is valid, then a user is created in Cognito with a verified phone nu
 
 - [Verify SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/verify-sms-challenge.ts)
 
+## Init email challenge
+
+This lambda can be called to initiate an email challenge by sending an OTP code.
+
+- [Init email challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/init-email-challenge.ts)
+
+## Verify email challenge
+
+This lambda can be called to verify an email challenge by checking the OTP code submitted by the user.
+It is only called in a registration flow where the user needs to verify both their phone number and their email address.
+This lambda creates the user in Cognito with a verified phone number and email.
+
+- [Verify email challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/verify-email-challenge.ts)
+
 ## Cognito triggers
 
 The following lambdas are used for signing in to Cognito with SMS OTP, email OTP, passkey, or Apple or Google sign-in:
@@ -29,11 +43,11 @@ The following lambdas are used for signing in to Cognito with SMS OTP, email OTP
 - [Create auth challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/triggers/create-auth-challenge.ts)
 - [Verify auth challenge response](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/triggers/verify-auth-challenge-response.ts)
 
-## Add authenticator endpoint
+## Add passkey endpoint
 
-This lambda is called to authorize enrolling additional authentication methods - such as a passkey - via a Authsignal Client SDK once the user is signed in.
+This lambda is called to authorize enrolling a passkey via an Authsignal Client SDK once the user is signed in.
 
-- [Add authenticator](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/add-authenticator.ts)
+- [Add passkey](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/add-passkey.ts)
 
 ## Installation
 
