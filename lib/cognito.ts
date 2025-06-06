@@ -1,7 +1,9 @@
 import {
   AdminCreateUserCommand,
+  AdminInitiateAuthCommand,
+  AdminRespondToAuthChallengeCommand,
   AdminSetUserPasswordCommand,
-  AdminUpdateUserAttributesCommand,
+  ChallengeNameType,
   CognitoIdentityProviderClient,
 } from "@aws-sdk/client-cognito-identity-provider";
 import crypto from "node:crypto";
@@ -16,39 +18,24 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 
 interface CognitoUserAttributesInput {
   username: string;
-  email?: string;
-  emailVerified?: boolean;
-  phoneNumber?: string;
-  phoneNumberVerified?: boolean;
+  phoneNumber: string;
+  email: string;
 }
 
+// We can only create users in Cognito with a verified phone number and email
 export async function createCognitoUser(input: CognitoUserAttributesInput) {
-  const { username, email, emailVerified, phoneNumber, phoneNumberVerified } = input;
-
-  // Phone number is a required attribute in our user pool
-  if (!phoneNumber) {
-    throw new Error("Phone number is required");
-  }
-
-  const userAttributes = [{ Name: "phone_number", Value: phoneNumber }];
-
-  if (phoneNumberVerified) {
-    userAttributes.push({ Name: "phone_number_verified", Value: "true" });
-  }
-
-  if (email) {
-    userAttributes.push({ Name: "email", Value: email });
-  }
-
-  if (emailVerified) {
-    userAttributes.push({ Name: "email_verified", Value: "true" });
-  }
+  const { username, phoneNumber, email } = input;
 
   const createUserCommand = new AdminCreateUserCommand({
     UserPoolId: process.env.USER_POOL_ID!,
     Username: username,
     MessageAction: "SUPPRESS",
-    UserAttributes: userAttributes,
+    UserAttributes: [
+      { Name: "phone_number", Value: phoneNumber },
+      { Name: "phone_number_verified", Value: "true" },
+      { Name: "email", Value: email },
+      { Name: "email_verified", Value: "true" },
+    ],
   });
 
   await cognitoIdentityProviderClient.send(createUserCommand);
@@ -63,20 +50,40 @@ export async function createCognitoUser(input: CognitoUserAttributesInput) {
   await cognitoIdentityProviderClient.send(setUserPasswordCommand);
 }
 
-interface SetCognitoEmailVerifiedInput {
+interface AuthenticateCognitoUserInput {
   username: string;
-  email: string;
+  answer: string;
 }
 
-export async function setCognitoEmailVerified(input: SetCognitoEmailVerifiedInput) {
-  const command = new AdminUpdateUserAttributesCommand({
+export async function authenticateCognitoUser(input: AuthenticateCognitoUserInput) {
+  const { username, answer } = input;
+
+  const initiateAuthCommand = new AdminInitiateAuthCommand({
     UserPoolId: process.env.USER_POOL_ID!,
-    Username: input.username,
-    UserAttributes: [
-      { Name: "email", Value: input.email },
-      { Name: "email_verified", Value: "true" },
-    ],
+    ClientId: process.env.USER_POOL_CLIENT_ID!,
+    AuthFlow: "CUSTOM_AUTH",
+    AuthParameters: {
+      USERNAME: username,
+    },
   });
 
-  await cognitoIdentityProviderClient.send(command);
+  const initiateAuthOutput = await cognitoIdentityProviderClient.send(initiateAuthCommand);
+
+  const respondToAuthChallengeCommand = new AdminRespondToAuthChallengeCommand({
+    UserPoolId: process.env.USER_POOL_ID!,
+    ClientId: process.env.USER_POOL_CLIENT_ID!,
+    ChallengeName: ChallengeNameType.CUSTOM_CHALLENGE,
+    Session: initiateAuthOutput.Session,
+    ChallengeResponses: {
+      USERNAME: username,
+      ANSWER: answer,
+    },
+  });
+
+  const respondToAuthChallengeOutput = await cognitoIdentityProviderClient.send(respondToAuthChallengeCommand);
+
+  return {
+    accessToken: respondToAuthChallengeOutput.AuthenticationResult?.AccessToken,
+    refreshToken: respondToAuthChallengeOutput.AuthenticationResult?.RefreshToken,
+  };
 }

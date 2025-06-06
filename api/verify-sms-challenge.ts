@@ -1,7 +1,6 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
-import { v4 as uuid } from "uuid";
 import { authsignal } from "../lib/authsignal";
-import { createCognitoUser } from "../lib/cognito";
+import { authenticateCognitoUser, createCognitoUser } from "../lib/cognito";
 
 interface RequestBody {
   challengeId: string;
@@ -10,9 +9,7 @@ interface RequestBody {
 
 interface ResponseBody {
   isVerified: boolean;
-  userId?: string;
-  token?: string;
-  emailVerified?: boolean;
+  accessToken?: string;
 }
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBody> => {
@@ -29,42 +26,30 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBo
     };
   }
 
-  // Now we know the user's phone number has been verified.
-  // Lookup user by their phone number - create a new user if they don't exist
-  const { userId, emailVerified } = await getOrCreateUser(phoneNumber);
-
-  // Now claim the SMS challenge on behalf of the user
-  const { token } = await authsignal.claimChallenge({ challengeId, userId });
-
-  return {
-    isVerified,
-    userId,
-    token,
-    emailVerified,
-  };
-};
-
-async function getOrCreateUser(phoneNumber: string) {
   const { users } = await authsignal.queryUsers({ phoneNumber });
 
-  if (users[0]?.userId) {
+  const existingUser = users.length > 0 ? users[0] : undefined;
+
+  // User's phone number is verified but email may not be verified yet
+  // Proceed with login only if email is verified
+  if (!existingUser || !existingUser.emailVerified) {
     return {
-      userId: users[0].userId,
-      emailVerified: users[0].emailVerified, // Return email verification status
+      isVerified: true,
     };
   }
 
-  // Create user in Cognito
-  const userId = uuid();
+  // Email is already verified, proceed to authenticate with Cognito
+  const { userId } = existingUser;
 
-  await createCognitoUser({
-    username: userId,
-    phoneNumber,
-    phoneNumberVerified: true,
-  });
+  const { token } = await authsignal.claimChallenge({ challengeId, userId });
+
+  const username = existingUser.userId;
+  const answer = token;
+
+  const { accessToken } = await authenticateCognitoUser({ username, answer });
 
   return {
-    userId,
-    emailVerified: false, // Assume email is unverified for new users
+    isVerified,
+    accessToken,
   };
-}
+};

@@ -11,6 +11,7 @@ provider:
     ACCESS_KEY_ID: ${env:ACCESS_KEY_ID}
     SECRET_ACCESS_KEY: ${env:SECRET_ACCESS_KEY}
     USER_POOL_ID: ${env:USER_POOL_ID}
+    USER_POOL_CLIENT_ID: ${env:USER_POOL_CLIENT_ID}
   httpApi:
     authorizers:
       jwtAuthorizer:
@@ -46,6 +47,20 @@ functions:
       - httpApi:
           method: post
           path: /verify/sms
+
+  init-email-challenge:
+    handler: api/init-email-challenge.handler
+    events:
+      - httpApi:
+          method: post
+          path: /challenge/email
+
+  verify-email-challenge:
+    handler: api/verify-email-challenge.handler
+    events:
+      - httpApi:
+          method: post
+          path: /verify/email
 
   init-social-auth:
     handler: api/init-social-auth.handler

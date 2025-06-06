@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@authsignal/node@^2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@authsignal/node/-/node-2.5.3.tgz#51e1a1d6d7489ddf6dcfa1d81b37a9141953bdad"
-  integrity sha512-n8a/XS6N+B6fpPyaq3/74txNgzEGP6XYR3GoMX3GbQwxsU+8SYqRU/sXV/j4AGTKj7K1bh94kmPCXpq1+STBlQ==
+"@authsignal/node@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@authsignal/node/-/node-2.6.0.tgz#f51f081b8b6790c4cb3322036624649c24b146ea"
+  integrity sha512-4Isv4XDDlSsy7FV+0Htf/JqKX+mCLrFPSzpVnnJn858opLhroRs1ytgnowmkikg+RnPshkeYWuLZURM+tVsQ/w==
   dependencies:
     axios "^1.7.9"
     axios-retry "^4.5.0"

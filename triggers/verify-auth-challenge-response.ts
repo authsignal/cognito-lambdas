@@ -1,6 +1,5 @@
 import { VerifyAuthChallengeResponseTriggerHandler } from "aws-lambda";
 import { authsignal } from "../lib/authsignal";
-import { setCognitoEmailVerified } from "../lib/cognito";
 
 export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) => {
   // For SMS, email OTP, and passkey this will be an Authsignal token
@@ -16,17 +15,6 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   });
 
   event.response.answerCorrect = isValid;
-
-  const { email, emailVerified, phoneNumberVerified } = await authsignal.getUser({ userId });
-
-  // Ensure that both email and phone number are verified
-  if (!email || !emailVerified || !phoneNumberVerified) {
-    throw new Error("Both email and phone number must be verified.");
-  }
-
-  if (event.request.userAttributes.email_verified !== "true") {
-    await setCognitoEmailVerified({ username: event.userName, email });
-  }
 
   return event;
 };
