@@ -17,7 +17,7 @@ This lambda can be called to initiate an SMS challenge by sending an OTP code.
 ## Verify SMS challenge
 
 This lambda can be called to verify an SMS challenge by checking the OTP code submitted by the user.
-If the code is valid, then a user is created in Cognito with a verified phone number.
+If the code is valid, then a Cognito access token is returned only if the user has already verified their email address.
 
 - [Verify SMS challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/verify-sms-challenge.ts)
 
@@ -30,7 +30,7 @@ This lambda can be called to initiate an email challenge by sending an OTP code.
 ## Verify email challenge
 
 This lambda can be called to verify an email challenge by checking the OTP code submitted by the user.
-It is only called in a registration flow where the user needs to verify both their phone number and their email address.
+It can be called in a registration flow where the user needs to verify both their phone number and their email address.
 This lambda creates the user in Cognito with a verified phone number and email.
 
 - [Verify email challenge](https://github.com/authsignal/cognito-lambdas/blob/alternative-approach/api/verify-email-challenge.ts)
