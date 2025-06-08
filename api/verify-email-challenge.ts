@@ -32,13 +32,9 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseBo
   // Email is verified, now lookup the SMS challenge to get the phone number
   const smsChallengeResponse = await authsignal.getChallenge({ challengeId: smsChallengeId });
 
-  if (
-    !smsChallengeResponse.challengeId ||
-    !smsChallengeResponse.phoneNumber ||
-    smsChallengeResponse.verificationMethod !== "SMS"
-  ) {
+  if (!smsChallengeResponse.phoneNumber || smsChallengeResponse.verificationMethod !== "SMS") {
     // SMS challenge is either invalid, expired, or incomplete
-    // The verificationMethod field is only present if the challenge is valid
+    // The verificationMethod field is only present if the challenge has been completed
     return {
       isVerified: false,
     };
