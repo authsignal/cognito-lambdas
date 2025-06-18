@@ -57,3 +57,12 @@ functions:
           path: /authenticators/verify
           authorizer:
             name: jwtAuthorizer
+
+  transferFunds:
+    handler: api/transfer-funds.handler
+    events:
+      - httpApi:
+          method: post
+          path: /transfer-funds
+          authorizer:
+            name: jwtAuthorizer
