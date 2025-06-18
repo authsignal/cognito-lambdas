@@ -42,7 +42,7 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
   }
 
   if (body.amount) {
-    // If no token is present we need check if step-up authentication is required
+    // If no token is present we need check if transaction signing is required
     const { state, token } = await authsignal.track({
       userId,
       action,
@@ -54,11 +54,11 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
     });
 
     if (state === UserActionState.ALLOW) {
-      // No step-up authentication is required
+      // No transaction signing is required
       // Proceed with transferring funds
       return await transferFunds(body.amount);
     } else {
-      // Step-up authentication is required
+      // Transaction signing is required
       return {
         transferCompleted: false,
         token,
