@@ -18,7 +18,8 @@ provider:
         identitySource: $request.header.authorization
         issuerUrl: https://cognito-idp.${env:AWS_REGION}.amazonaws.com/${env:USER_POOL_ID}
         audience:
-          - ${env:USER_POOL_CLIENT_ID}
+          - ${env:USER_POOL_MOBILE_CLIENT_ID}
+          - ${env:USER_POOL_WEB_CLIENT_ID}
 
 package:
   individually: true
@@ -33,12 +34,8 @@ functions:
   verifyAuthChallengeResponse:
     handler: triggers/verify-auth-challenge-response.handler
 
-  startSignIn:
-    handler: api/start-sign-in.handler
-    events:
-      - httpApi:
-          method: post
-          path: /start-sign-in
+  preSignUp:
+    handler: triggers/pre-sign-up.handler
 
   addAuthenticator:
     handler: api/add-authenticator.handler
@@ -46,14 +43,5 @@ functions:
       - httpApi:
           method: post
           path: /authenticators
-          authorizer:
-            name: jwtAuthorizer
-
-  verifyAuthenticator:
-    handler: api/verify-authenticator.handler
-    events:
-      - httpApi:
-          method: post
-          path: /authenticators/verify
           authorizer:
             name: jwtAuthorizer
