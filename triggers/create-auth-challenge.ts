@@ -4,7 +4,9 @@ import { authsignal } from "../lib/authsignal";
 export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   const userId = event.request.userAttributes.sub;
   const email = event.request.userAttributes.email;
+
   const deviceId = event.request.clientMetadata?.deviceId;
+  const isDeviceTrusted = event.request.clientMetadata?.isDeviceTrusted ?? "false";
 
   const { isEnrolled, state, url, token } = await authsignal.track({
     action: "mfa",
@@ -12,6 +14,9 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
     attributes: {
       email,
       deviceId,
+      custom: {
+        isDeviceTrusted,
+      },
     },
   });
 
