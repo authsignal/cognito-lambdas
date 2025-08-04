@@ -8,8 +8,6 @@ provider:
   environment:
     AUTHSIGNAL_SECRET: ${env:AUTHSIGNAL_SECRET}
     AUTHSIGNAL_URL: ${env:AUTHSIGNAL_URL}
-    ACCESS_KEY_ID: ${env:ACCESS_KEY_ID}
-    SECRET_ACCESS_KEY: ${env:SECRET_ACCESS_KEY}
     USER_POOL_ID: ${env:USER_POOL_ID}
   httpApi:
     authorizers:
@@ -18,7 +16,6 @@ provider:
         identitySource: $request.header.authorization
         issuerUrl: https://cognito-idp.${env:AWS_REGION}.amazonaws.com/${env:USER_POOL_ID}
         audience:
-          - ${env:USER_POOL_MOBILE_CLIENT_ID}
           - ${env:USER_POOL_WEB_CLIENT_ID}
 
 package:

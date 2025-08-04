@@ -2,8 +2,6 @@ import { VerifyAuthChallengeResponseTriggerHandler } from "aws-lambda";
 import { authsignal } from "../lib/authsignal";
 
 export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) => {
-  console.log("Verify Auth Challenge Response event:", JSON.stringify(event, null, 2));
-
   const userId = event.request.userAttributes.sub;
   const token = event.request.challengeAnswer;
 

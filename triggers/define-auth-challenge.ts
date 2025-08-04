@@ -1,8 +1,6 @@
 import { DefineAuthChallengeTriggerHandler } from "aws-lambda";
 
 export const handler: DefineAuthChallengeTriggerHandler = async (event) => {
-  console.log("Define Auth Challenge request:", JSON.stringify(event.request, null, 2));
-
   const { session } = event.request;
 
   if (session.length === 1 && session[0].challengeName === "SRP_A") {

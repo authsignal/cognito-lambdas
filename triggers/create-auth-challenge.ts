@@ -2,8 +2,6 @@ import { CreateAuthChallengeTriggerHandler } from "aws-lambda";
 import { authsignal } from "../lib/authsignal";
 
 export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
-  console.log("Create Auth Challenge request:", JSON.stringify(event.request, null, 2));
-
   const userId = event.request.userAttributes.sub;
   const email = event.request.userAttributes.email;
   const deviceId = event.request.clientMetadata?.deviceId;
