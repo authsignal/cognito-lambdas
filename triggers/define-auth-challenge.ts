@@ -3,25 +3,47 @@ import { DefineAuthChallengeTriggerHandler } from "aws-lambda";
 export const handler: DefineAuthChallengeTriggerHandler = async (event) => {
   const { session } = event.request;
 
-  if (session.length === 1 && session[0].challengeName === "SRP_A") {
-    event.response.issueTokens = false;
-    event.response.failAuthentication = false;
-    event.response.challengeName = "PASSWORD_VERIFIER";
-  } else if (session.length === 2 && session[1].challengeName === "PASSWORD_VERIFIER") {
+  const latestSession = session.length > 0 ? session[session.length - 1] : undefined;
+
+  if (!latestSession) {
+    // Create custom challenge for passwordless login via passkey
     event.response.issueTokens = false;
     event.response.failAuthentication = false;
     event.response.challengeName = "CUSTOM_CHALLENGE";
-  } else if (
-    session.length === 3 &&
-    session[2].challengeName === "CUSTOM_CHALLENGE" &&
-    session[2].challengeResult === true
-  ) {
+
+    return event;
+  }
+
+  if (latestSession.challengeName === "SRP_A") {
+    // Create password verifier challenge for username and password login
+    event.response.issueTokens = false;
+    event.response.failAuthentication = false;
+    event.response.challengeName = "PASSWORD_VERIFIER";
+
+    return event;
+  }
+
+  if (latestSession.challengeName === "PASSWORD_VERIFIER") {
+    // Create custom challenge for MFA after username and password login
+    event.response.issueTokens = false;
+    event.response.failAuthentication = false;
+    event.response.challengeName = "CUSTOM_CHALLENGE";
+
+    return event;
+  }
+
+  if (latestSession.challengeName === "CUSTOM_CHALLENGE" && latestSession.challengeResult) {
+    // Handle successful custom challenge
+    // This is either for passwordless login via passkey or MFA after username and password login
     event.response.issueTokens = true;
     event.response.failAuthentication = false;
-  } else {
-    event.response.issueTokens = false;
-    event.response.failAuthentication = true;
+
+    return event;
   }
+
+  // Something went wrong - fail authentication
+  event.response.issueTokens = false;
+  event.response.failAuthentication = true;
 
   return event;
 };

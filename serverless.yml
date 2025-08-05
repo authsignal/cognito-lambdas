@@ -10,6 +10,7 @@ provider:
     AUTHSIGNAL_URL: ${env:AUTHSIGNAL_URL}
     USER_POOL_ID: ${env:USER_POOL_ID}
   httpApi:
+    cors: true
     authorizers:
       jwtAuthorizer:
         type: jwt
