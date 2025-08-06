@@ -16,15 +16,13 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (event) 
   } else {
     // Handle validation for MFA after username and password
     // In this case the action state may be ALLOW if the device is trusted
-    const { isEnrolled } = await authsignal.getUser({ userId });
-
     const { state } = await authsignal.validateChallenge({
       action: "mfa",
       userId,
       token: event.request.challengeAnswer,
     });
 
-    event.response.answerCorrect = (isEnrolled && state === "ALLOW") || state === "CHALLENGE_SUCCEEDED";
+    event.response.answerCorrect = state === "ALLOW" || state === "CHALLENGE_SUCCEEDED";
   }
 
   return event;

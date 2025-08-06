@@ -17,7 +17,7 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   const deviceId = event.request.clientMetadata?.deviceId;
   const isDeviceTrusted = event.request.clientMetadata?.isDeviceTrusted ?? "false";
 
-  const { isEnrolled, state, url, token } = await authsignal.track({
+  const { state, url, token } = await authsignal.track({
     action: "mfa",
     userId,
     attributes: {
@@ -30,7 +30,6 @@ export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   });
 
   event.response.publicChallengeParameters = {
-    isEnrolled: isEnrolled.toString(),
     state,
     url,
     token,
