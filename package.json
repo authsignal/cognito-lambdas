@@ -20,6 +20,9 @@
     "serverless": "^4.1.6",
     "typescript": "5.0.4"
   },
+  "resolutions": {
+    "fast-xml-parser": "5.3.6"
+  },
   "engines": {
     "node": ">=18"
   }
